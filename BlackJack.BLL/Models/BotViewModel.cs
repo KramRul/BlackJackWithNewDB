@@ -13,8 +13,8 @@ namespace BlackJack.BLL.Models
 
         public decimal Bet { get; set; }
 
-        public int HandId { get; set; }
+        public Guid GameId { get; set; }
 
-        public Hand Hand { get; set; }
+        public Game Game { get; set; }
     }
 }

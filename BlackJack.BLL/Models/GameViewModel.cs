@@ -1,16 +1,15 @@
 ﻿using BlackJack.DAL.Entities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace BlackJack.BLL.Models
 {
-    public class HandViewModel
+    public class GameViewModel
     {
         public Guid Id { get; set; }
 
-        public int PlayerId { get; set; }
+        public Guid PlayerId { get; set; }
 
         public Player Player { get; set; }
     }

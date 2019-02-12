@@ -20,24 +20,33 @@ namespace BlackJack.BLL.Services
             Database = uow;
         }
 
-        public void StartGame()
+        public void StartGame(PlayerViewModel playerVM, GameViewModel gameVM)
         {
             GameState = GameState.Unknown;
+            Player player = Database.Players.Get(new Guid(playerVM.Id));
+            Game game = Database.Games.Get(gameVM.Id);
+
+            //???
+            game.PlayerId = new Guid(player.Id);
+            player.GameId = game.Id;
+            game.Player = player;
+            player.Game = game;
+
+            Database.Games.Update(game);
+            Database.Players.Update(player);
+            Database.Save();
         }
 
         public void Hit(PlayerViewModel playerVM)
         {
             Player player = Database.Players.Get(new Guid(playerVM.Id));
 
-            var qq = new List<Hand>();
-            qq.Add(new Hand()
-            {
-                PlayerId = //,
-                
-            });
+            Random rnd = new Random();
+            var playerStep = new PlayerStep() { Player = player, PlayerId = new Guid(player.Id), Rank= (Rank)rnd.Next(1, 13), Suite = (Suite)rnd.Next(1, 4) };
+            Database.PlayerSteps.Create(playerStep);
+            Database.Save();
 
-            player.Hand.Add(GetCard());
-            if (TotalValue(player.Hand) > 21)
+            if (TotalValue(Database.PlayerSteps.GetAll()) > 21)
             {
                 player.Balance -= player.Bet;
                 GameState = GameState.DealerWon;
@@ -46,16 +55,16 @@ namespace BlackJack.BLL.Services
             Database.Save();
         }
 
-        private Card GetCard()
+        /*private Card GetStep()
         {
             Random rnd = new Random();
             return new Card() { Rank = (Rank)rnd.Next(1, 13), Suite= (Suite)rnd.Next(1, 4) };
-        }
+        }*/
 
-        private int TotalValue(Hand hand)
+        private int TotalValue(IEnumerable<PlayerStep> playerSteps)
         {
             int totalSum=0;
-            foreach (var card in hand.Cards)
+            foreach (var card in playerSteps)
             {
                 if (card.Rank == Rank.Ace && totalSum <= 10)
                 {
@@ -102,9 +111,111 @@ namespace BlackJack.BLL.Services
             return totalSum;
         }
 
-        public void PlaceABet(PlayerDTO playerDTO, int bet)
+        private int TotalValue(IEnumerable<DealerStep> dealerSteps)
         {
-            Player player = Database.Players.Get(Convert.ToInt32(playerDTO.Id));
+            int totalSum = 0;
+            foreach (var card in dealerSteps)
+            {
+                if (card.Rank == Rank.Ace && totalSum <= 10)
+                {
+                    totalSum += 11;
+                }
+                else if (card.Rank == Rank.Ace && totalSum > 10 && totalSum < 21)
+                {
+                    totalSum += 1;
+                }
+                else if (card.Rank == Rank.Jack || card.Rank == Rank.King || card.Rank == Rank.Queen)
+                {
+                    totalSum += 10;
+                }
+                switch (card.Rank)
+                {
+                    case Rank.Two:
+                        totalSum += 2;
+                        break;
+                    case Rank.Three:
+                        totalSum += 3;
+                        break;
+                    case Rank.Four:
+                        totalSum += 4;
+                        break;
+                    case Rank.Five:
+                        totalSum += 5;
+                        break;
+                    case Rank.Six:
+                        totalSum += 6;
+                        break;
+                    case Rank.Seven:
+                        totalSum += 7;
+                        break;
+                    case Rank.Eight:
+                        totalSum += 8;
+                        break;
+                    case Rank.Nine:
+                        totalSum += 9;
+                        break;
+                    case Rank.Ten:
+                        totalSum += 10;
+                        break;
+                }
+            }
+            return totalSum;
+        }
+
+        private int TotalValue(IEnumerable<BotStep> botSteps)
+        {
+            int totalSum = 0;
+            foreach (var card in botSteps)
+            {
+                if (card.Rank == Rank.Ace && totalSum <= 10)
+                {
+                    totalSum += 11;
+                }
+                else if (card.Rank == Rank.Ace && totalSum > 10 && totalSum < 21)
+                {
+                    totalSum += 1;
+                }
+                else if (card.Rank == Rank.Jack || card.Rank == Rank.King || card.Rank == Rank.Queen)
+                {
+                    totalSum += 10;
+                }
+                switch (card.Rank)
+                {
+                    case Rank.Two:
+                        totalSum += 2;
+                        break;
+                    case Rank.Three:
+                        totalSum += 3;
+                        break;
+                    case Rank.Four:
+                        totalSum += 4;
+                        break;
+                    case Rank.Five:
+                        totalSum += 5;
+                        break;
+                    case Rank.Six:
+                        totalSum += 6;
+                        break;
+                    case Rank.Seven:
+                        totalSum += 7;
+                        break;
+                    case Rank.Eight:
+                        totalSum += 8;
+                        break;
+                    case Rank.Nine:
+                        totalSum += 9;
+                        break;
+                    case Rank.Ten:
+                        totalSum += 10;
+                        break;
+                }
+            }
+            return totalSum;
+        }
+
+        public void PlaceABet(PlayerViewModel playerVM, int bet)
+        {
+            Player player = Database.Players.Get(new Guid(playerVM.Id));
             if (player.Balance < bet)
                 throw new ValidationException("Недостаточно средств на счету", "Bet");
             else
@@ -116,25 +227,26 @@ namespace BlackJack.BLL.Services
             }
         }
 
-        public void Stand(PlayerDTO playerDTO, PlayerDTO dealerDTO)
+        public void Stand(PlayerViewModel playerVM, DealerViewModel dealerVM)
         {
-            Player player = Database.Players.Get(Convert.ToInt32(playerDTO.Id));
+            Player player = Database.Players.Get(new Guid(playerVM.Id));
 
-            Player dealer = Database.Players.Get(Convert.ToInt32(dealerDTO.Id));
+            Dealer dealer = Database.Dealers.Get(dealerVM.Id);
 
-            while (TotalValue(dealerDTO.Hand) <= 20)
+            while (TotalValue(Database.DealerSteps.GetAll()) <= 20)
             {
-                dealer.Hand.Cards.Add(GetCard());
-                Database.Players.Update(dealer);
+                Random rnd = new Random();
+                var dealerStep = new DealerStep() { Dealer = dealer, DealerId = dealer.Id, Rank = (Rank)rnd.Next(1, 13), Suite = (Suite)rnd.Next(1, 4) };
+                Database.DealerSteps.Create(dealerStep);
                 Database.Save();
             }
 
-            if (TotalValue(dealer.Hand) > 21 || TotalValue(player.Hand) > TotalValue(dealer.Hand))
+            if (TotalValue(Database.DealerSteps.GetAll()) > 21 || TotalValue(Database.PlayerSteps.GetAll()) > TotalValue(Database.DealerSteps.GetAll()))
             {
                 player.Balance += player.Bet;
                 GameState = GameState.PlayerWon;
             }
-            else if (TotalValue(dealer.Hand) == TotalValue(player.Hand))
+            else if (TotalValue(Database.DealerSteps.GetAll()) == TotalValue(Database.PlayerSteps.GetAll()))
             {
                 GameState = GameState.Draw;
             }
@@ -145,13 +257,13 @@ namespace BlackJack.BLL.Services
             }
 
             Database.Players.Update(player);
-            Database.Players.Update(dealer);
+            Database.Dealers.Update(dealer);
             Database.Save();
         }
 
         public void StopGame()
         {
-            throw new NotImplementedException();
+            GameState = GameState.Unknown;
         }
 
         public void Dispose()

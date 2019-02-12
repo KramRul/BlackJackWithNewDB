@@ -7,11 +7,11 @@ namespace BlackJack.BLL.Interfaces
 {
     public interface IGameService
     {
-        void StartGame();
+        void StartGame(PlayerViewModel playerVM, GameViewModel gameVM);
         void StopGame();
         void PlaceABet(PlayerViewModel playerVM, int bet);
         void Hit(PlayerViewModel playerVM);
-        void Stand(PlayerViewModel playerVM, PlayerViewModel dealerVM);
+        void Stand(PlayerViewModel playerVM, DealerViewModel dealerVM);
         void Dispose();
     }
 }

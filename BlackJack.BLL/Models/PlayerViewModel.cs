@@ -7,16 +7,14 @@ using System.Threading.Tasks;
 
 namespace BlackJack.BLL.Models
 {
-    public class PlayerViewModel: IdentityUser
+    public class PlayerViewModel : IdentityUser
     {
+        public Guid GameId { get; set; }
+
+        public Game Game { get; set; }
+
         public decimal Balance { get; set; }
 
         public decimal Bet { get; set; }
-
-        public Role Role { get; set; }
-
-        public int HandId { get; set; }
-
-        public Hand Hand { get; set; }
     }
 }
