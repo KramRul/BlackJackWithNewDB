@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model BlackJack.
+<form>
+    <div class="form-group">
+        <label for="exampleFormControlSelect1">Выберите количество ботов</label>
+        <select class="form-control" id="exampleFormControlSelect1">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <input name="city" list="cities" />
+        @for()
+        <datalist id="cities">
+            <option value="Naples" />
+            <option value="London" />
+            <option value="Berlin" />
+            <option value="New York" />
+            <option value="Frattamaggiore" />
+        </datalist>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<button type="button" class="btn btn-primary btn-lg btn-block">Start Game</button>
