@@ -2,6 +2,7 @@
 using BlackJack.DAL.Entities;
 using BlackJack.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,11 +20,20 @@ namespace BlackJack.DAL.Repositories
         private BotStepRepository botStepRepository;
         private DealerStepRepository dealerStepRepository;
 
-        public EFUnitOfWork(string connectionString)
+        //public EFUnitOfWork(string connectionString)IConfiguration configuration
+        //{
+        //    var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
+        //    optionsBuilder.UseSqlServer(connectionString);
+        //    db = new ApplicationContext(optionsBuilder.Options);
+        //}
+
+        public EFUnitOfWork(ApplicationContext context)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
-            optionsBuilder.UseSqlServer(connectionString);
-            db = new ApplicationContext(optionsBuilder.Options);
+            /*var connectionString = configuration.GetConnectionString("");
+            //var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
+            //optionsBuilder.UseSqlServer(connectionString);
+            db = new ApplicationContext(connectionString);*/
+            db = context;
         }
         public IRepository<Game> Games
         {

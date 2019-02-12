@@ -2,10 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BlackJack.BLL.Interfaces;
+using BlackJack.BLL.Services;
+using BlackJack.DAL.EF;
+using BlackJack.DAL.Interfaces;
+using BlackJack.DAL.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,9 +35,13 @@ namespace BlackJack
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });*/
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+            // добавляем контекст MobileContext в качестве сервиса в приложение
+            services.AddDbContext<ApplicationContext>(options =>
+                options.UseSqlServer(connection, b => b.MigrationsAssembly("BlackJack")));
 
-            /*services.AddTransient<IUnitOfWork, EFUnitOfWork>();
-            services.AddTransient<IGameService, GameService>();*/
+            services.AddTransient<IUnitOfWork, EFUnitOfWork>();
+            services.AddTransient<IGameService, GameService>();
 
             services.AddMvc();
         }
