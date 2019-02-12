@@ -12,10 +12,12 @@ namespace BlackJack.DAL.Repositories
     {
         private ApplicationContext db;
         private GameRepository gameRepository;
-        private PlayerStepRepository playerStepRepository;
-        private BotStepRepository botStepRepository;
         private PlayerRepository playerRepository;
         private BotRepository botRepository;
+        private DealerRepository dealerRepository;
+        private PlayerStepRepository playerStepRepository;
+        private BotStepRepository botStepRepository;
+        private DealerStepRepository dealerStepRepository;
 
         public EFUnitOfWork(string connectionString)
         {
@@ -53,6 +55,16 @@ namespace BlackJack.DAL.Repositories
             }
         }
 
+        public IRepository<Dealer> Dealers
+        {
+            get
+            {
+                if (dealerRepository == null)
+                    dealerRepository = new DealerRepository(db);
+                return dealerRepository;
+            }
+        }
+
         public IRepository<PlayerStep> PlayerSteps
         {
             get
@@ -70,6 +82,16 @@ namespace BlackJack.DAL.Repositories
                 if (botStepRepository == null)
                     botStepRepository = new BotStepRepository(db);
                 return botStepRepository;
+            }
+        }
+
+        public IRepository<DealerStep> DealerSteps
+        {
+            get
+            {
+                if (dealerStepRepository == null)
+                    dealerStepRepository = new DealerStepRepository(db);
+                return dealerStepRepository;
             }
         }
 

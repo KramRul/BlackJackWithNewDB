@@ -13,7 +13,9 @@ namespace BlackJack.DAL.EF
         public DbSet<Game> Games { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<Bot> Bots { get; set; }
+        public DbSet<Dealer> Dealers { get; set; }
         public DbSet<BotStep> BotSteps { get; set; }
+        public DbSet<DealerStep> DealerSteps { get; set; }
         public DbSet<PlayerStep> PlayerSteps { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
