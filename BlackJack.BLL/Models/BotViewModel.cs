@@ -12,9 +12,5 @@ namespace BlackJack.BLL.Models
         public decimal Balance { get; set; }
 
         public decimal Bet { get; set; }
-
-        public Guid GameId { get; set; }
-
-        public Game Game { get; set; }
     }
 }

@@ -15,5 +15,9 @@ namespace BlackJack.DAL.Entities
         public Guid BotId { get; set; }
 
         public Bot Bot { get; set; }
+
+        public Guid GameId { get; set; }
+
+        public Game Game { get; set; }
     }
 }

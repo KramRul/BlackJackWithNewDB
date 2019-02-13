@@ -12,8 +12,8 @@ namespace BlackJack.DAL.Entities
 
         public decimal Bet { get; set; }
 
-        public Guid GameId { get; set; }
+        /*public Guid GameId { get; set; }
 
-        public Game Game { get; set; }
+        public Game Game { get; set; }*/
     }
 }
