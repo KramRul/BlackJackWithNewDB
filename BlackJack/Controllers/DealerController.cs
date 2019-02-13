@@ -109,5 +109,11 @@ namespace BlackJack.Controllers
                 return View();
             }
         }
+
+        [HttpGet]
+        public IActionResult AllSteps(Guid Id)
+        {
+            return View(_dealerService.GetAllSteps(Id).ToList());
+        }
     }
 }

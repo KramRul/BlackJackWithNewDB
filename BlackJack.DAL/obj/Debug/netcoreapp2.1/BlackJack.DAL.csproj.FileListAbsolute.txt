@@ -8,3 +8,4 @@ C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack.DAL\obj\Debug\n
 C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack.DAL\obj\Debug\netcoreapp2.1\BlackJack.DAL.pdb
 C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack.DAL\bin\Debug\netcoreapp2.1\BlackJack.DAL.runtimeconfig.json
 C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack.DAL\bin\Debug\netcoreapp2.1\BlackJack.DAL.runtimeconfig.dev.json
+C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack.DAL\obj\Debug\netcoreapp2.1\BlackJack.DAL.csprojAssemblyReference.cache
