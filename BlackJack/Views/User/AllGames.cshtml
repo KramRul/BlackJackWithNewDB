@@ -1,0 +1,27 @@
+﻿@model IEnumerable<BlackJack.BLL.Models.GameViewModel>
+@{
+    ViewBag.Title = "Список игр";
+}
+
+<table class="table">
+    <tr><th>User Name</th><th>Balance</th><th>Bet</th><th>GameID</th></tr>
+    @foreach (var game in Model)
+    {
+        <tr>
+            <td>@game.Player.UserName</td>
+            <td>@game.Player.Balance</td>
+            <td>@game.Player.Bet</td>
+            <td>@game.Id</td>
+            <td>
+                <form asp-action="Delete" asp-controller="User" asp-route-id="@game.Player.Id" method="post">
+                    <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@game.Player.Id">Изменить</a>
+                    <a class="btn btn-sm btn-primary" asp-action="AllSteps" asp-route-id="@game.Player.Id">Шаги</a>
+                    <button type="submit" class="btn btn-sm btn-danger">
+                        Удалить
+                    </button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+

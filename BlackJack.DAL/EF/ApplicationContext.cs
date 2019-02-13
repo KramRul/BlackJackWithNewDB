@@ -23,6 +23,15 @@ namespace BlackJack.DAL.EF
         {
             Database.EnsureCreated();
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            /*modelBuilder.Entity<Player>()
+                .HasOne(p => p.Game)
+                .WithOne(i => i.Player)
+                .HasForeignKey<Game>(b => b.PlayerId);//playerid*/
+        }
     }
 
     

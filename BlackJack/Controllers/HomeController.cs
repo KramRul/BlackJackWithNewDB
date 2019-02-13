@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using BlackJack.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlackJack.Controllers
 {
     public class HomeController : Controller
     {
+        private IGameService gameService;
+
+        public HomeController(IGameService gameService)
+        {
+            this.gameService = gameService;
+        }
+
         public IActionResult Index()
         {
             return View();

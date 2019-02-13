@@ -30,3 +30,8 @@ C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack\obj\Debug\netco
 C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack\obj\Debug\netcoreapp2.2\BlackJack.csproj.CopyComplete
 C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack\obj\Debug\netcoreapp2.2\BlackJack.dll
 C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack\obj\Debug\netcoreapp2.2\BlackJack.pdb
+C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack\obj\Debug\netcoreapp2.2\Razor\Views\User\Register.g.cshtml.cs
+C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack\obj\Debug\netcoreapp2.2\Razor\Views\User\Index.g.cshtml.cs
+C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack\obj\Debug\netcoreapp2.2\Razor\Views\User\Edit.g.cshtml.cs
+C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack\obj\Debug\netcoreapp2.2\Razor\Views\User\AllSteps.g.cshtml.cs
+C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack\obj\Debug\netcoreapp2.2\Razor\Views\User\AllGames.g.cshtml.cs

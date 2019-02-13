@@ -12,7 +12,7 @@ namespace BlackJack.DAL.Entities
 
         public Rank Rank { get; set; }
 
-        public Guid PlayerId { get; set; }
+        public string PlayerId { get; set; }
 
         public Player Player { get; set; }
     }

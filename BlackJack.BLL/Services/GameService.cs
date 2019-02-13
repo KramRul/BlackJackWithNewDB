@@ -27,13 +27,17 @@ namespace BlackJack.BLL.Services
             Game game = Database.Games.Get(gameVM.Id);
 
             //???
-            game.PlayerId = new Guid(player.Id);
-            player.GameId = game.Id;
             game.Player = player;
-            player.Game = game;
 
             Database.Games.Update(game);
             Database.Players.Update(player);
+            Database.Save();
+        }
+
+        public void DeleteGame(Guid gameId)
+        {
+            Database.Games.Delete(gameId);
+
             Database.Save();
         }
 
@@ -42,7 +46,7 @@ namespace BlackJack.BLL.Services
             Player player = Database.Players.Get(new Guid(playerVM.Id));
 
             Random rnd = new Random();
-            var playerStep = new PlayerStep() { Player = player, PlayerId = new Guid(player.Id), Rank= (Rank)rnd.Next(1, 13), Suite = (Suite)rnd.Next(1, 4) };
+            var playerStep = new PlayerStep() { Player = player, PlayerId = player.Id, Rank= (Rank)rnd.Next(1, 13), Suite = (Suite)rnd.Next(1, 4) };
             Database.PlayerSteps.Create(playerStep);
             Database.Save();
 
@@ -269,6 +273,37 @@ namespace BlackJack.BLL.Services
         public void Dispose()
         {
             Database.Dispose();
+        }
+
+        public IEnumerable<GameViewModel> GetGamesForPlayer(string playerId)
+        {
+            List<GameViewModel> pl = new List<GameViewModel>();
+            foreach (var item in Database.Games.GetAll())
+            {
+                if (item.Player.Id == playerId)
+                {
+                    pl.Add(new GameViewModel()
+                    {
+                        Id = item.Id,
+                        Player = item.Player
+                    });
+                }
+            }
+            return pl;
+        }
+
+        public IEnumerable<GameViewModel> GetGames()
+        {
+            List<GameViewModel> pl = new List<GameViewModel>();
+            foreach (var item in Database.Games.GetAll())
+            {
+                pl.Add(new GameViewModel()
+                {
+                    Id = item.Id,
+                    Player = item.Player
+                });
+            }
+            return pl;
         }
     }
 }

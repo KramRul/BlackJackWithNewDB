@@ -7,9 +7,9 @@ namespace BlackJack.DAL.Entities
 {
     public class Player : IdentityUser
     {
-        public Guid GameId { get; set; }
+        //public Guid GameId { get; set; }
 
-        public Game Game { get; set; }
+        //public Game Game { get; set; }
 
         public decimal Balance { get; set; }
 

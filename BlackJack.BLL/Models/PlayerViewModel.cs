@@ -9,9 +9,9 @@ namespace BlackJack.BLL.Models
 {
     public class PlayerViewModel : IdentityUser
     {
-        public Guid GameId { get; set; }
+        //public Guid GameId { get; set; }
 
-        public Game Game { get; set; }
+        //public Game Game { get; set; }
 
         public decimal Balance { get; set; }
 
