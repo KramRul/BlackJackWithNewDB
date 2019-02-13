@@ -1,0 +1,25 @@
+﻿@model IEnumerable<BlackJack.BLL.Models.DealerViewModel>
+@{
+    ViewBag.Title = "Список игроков";
+}
+
+<a asp-action="Create">Добавить дилера</a>
+
+<table class="table">
+    <tr><th>Dealer ID</th></tr>
+    @foreach (var dealer in Model)
+    {
+        <tr>
+            <td>@dealer.Id</td>
+            <td>
+                <form asp-action="Delete" asp-controller="Dealer" asp-route-id="@dealer.Id" method="post">
+                    <a class="btn btn-sm btn-primary" asp-action="AllSteps" asp-route-id="@dealer.Id">Шаги</a>
+                    <button type="submit" class="btn btn-sm btn-danger">
+                        Удалить
+                    </button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+

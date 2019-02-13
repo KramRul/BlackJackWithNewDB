@@ -9,5 +9,7 @@ namespace BlackJack.DAL.Entities
         //public string PlayerId { get; set; }
 
         public Player Player { get; set; }
+
+        public Dealer Dealer { get; set; }
     }
 }

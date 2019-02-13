@@ -50,6 +50,7 @@ namespace BlackJack
             services.AddTransient<IUnitOfWork, EFUnitOfWork>();
             services.AddTransient<IGameService, GameService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IDealerService, DealerService>();
 
             services.AddMvc();
         }

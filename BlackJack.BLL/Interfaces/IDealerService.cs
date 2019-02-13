@@ -11,9 +11,11 @@ namespace BlackJack.BLL.Interfaces
 
         IEnumerable<DealerStepViewModel> GetAllSteps(Guid dealerId);
 
+        IEnumerable<DealerViewModel> GetAllDealers();
+
         void Edit(DealerViewModel dealerVM);
 
-        void Delete(DealerViewModel dealerVM);
+        void Delete(Guid dealerId);
 
         void Dispose();
     }

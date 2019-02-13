@@ -13,8 +13,8 @@ namespace BlackJack.BLL.Models
 
         public Rank Rank { get; set; }
 
-        public string PlayerId { get; set; }
+        public Guid DealerId { get; set; }
 
-        public Player Player { get; set; }
+        public Dealer Dealer { get; set; }
     }
 }
