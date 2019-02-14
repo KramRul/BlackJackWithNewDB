@@ -15,11 +15,17 @@ namespace BlackJack.Controllers
     {
         private readonly IGameService _gameService;
         private readonly UserManager<Player> _userManager;
+        private readonly IUserService _userService;
+        private readonly IDealerService _dealerService;
+        private readonly IBotService _botService;
 
-        public HomeController(IGameService gameService, UserManager<Player> userManager)
+        public HomeController(IGameService gameService, UserManager<Player> userManager, IUserService userService, IDealerService dealerService, IBotService botService)
         {
             _gameService = gameService;
             _userManager = userManager;
+            _userService = userService;
+            _dealerService = dealerService;
+            _botService = botService;
         }
 
         public IActionResult Index()
@@ -33,8 +39,8 @@ namespace BlackJack.Controllers
             Player user = await _userManager.FindByNameAsync(player);
             if (user == null)
             {
-                return NotFound();
-            }
+                return RedirectToAction("Index", "Home");
+            } 
             PlayerViewModel model = new PlayerViewModel { Id = user.Id, UserName = user.UserName };
             _gameService.StartGame(model, countOfBots);
             return View();
@@ -46,6 +52,54 @@ namespace BlackJack.Controllers
             return View(_gameService.GetGames().ToList());//_userManager.Users.ToList()
         }
 
+        [HttpGet]
+        public IActionResult Details(Guid Id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    GameViewModel game = _gameService.GetGame(Id);
+                    if (game != null)
+                    {
+                        GameDetailsViewModel VM = new GameDetailsViewModel()
+                        {
+                            Game = game,
+                            PlayerStepVM = _userService.GetAllSteps(game.Player.Id).ToList(),
+                            DealerStepVM = _dealerService.GetAllSteps(Id).ToList(),
+                            BotStepVM = _botService.GetAllSteps(Id).ToList()
+                        };
+
+                        return View(VM);
+                    }
+                }
+                return View();
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(Guid Id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _gameService.DeleteGame(Id);
+                    return RedirectToAction("AllGames");
+                }
+                else
+                    return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
         /*[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

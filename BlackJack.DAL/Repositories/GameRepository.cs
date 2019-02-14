@@ -23,9 +23,9 @@ namespace BlackJack.DAL.Repositories
             return db.Games.Include(d=>d.Player).Include(d=>d.Dealer);
         }
 
-        public Game Get(Guid id)
-        {
-            return db.Games.Find(id);
+        public Game Get(Guid gameid)
+        {//
+            return db.Games.Include(p => p.Player).Include(d => d.Dealer).Where(t => t.Id == gameid).ToList().First();
         }
 
         public void Create(Game game)

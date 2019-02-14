@@ -28,6 +28,15 @@ namespace BlackJack.BLL.Services
             Player player = Database.Players.Get(Guid.Parse(playerVM.Id));
             Game game = new Game() { Player=player, Dealer=new Dealer() };
 
+            if (countOfBots > 0)
+            {
+                for (int i = 0; i < countOfBots; i++)
+                {
+                    BotStep botStep = new BotStep() { Bot= new Bot() { Balance = 1000, Bet = 0 }, Game= game };
+                    Database.BotSteps.Create(botStep);
+                }
+            }
+
             Database.Games.Create(game);
             Database.Players.Update(player);
             Database.Save();
@@ -304,6 +313,17 @@ namespace BlackJack.BLL.Services
                 });
             }
             return pl;
+        }
+
+        public GameViewModel GetGame(Guid gameId)
+        {
+            Game game = Database.Games.Get(gameId);
+            return new GameViewModel()
+            {
+                Id = game.Id,
+                Player = game.Player,
+                Dealer = game.Dealer
+            };
         }
     }
 }
