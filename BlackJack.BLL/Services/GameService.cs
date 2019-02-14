@@ -225,9 +225,9 @@ namespace BlackJack.BLL.Services
             return totalSum;
         }
 
-        public void PlaceABet(PlayerViewModel playerVM, int bet)
+        public void PlaceABet(PlayerViewModel playerVM, decimal bet)
         {
-            Player player = Database.Players.Get(new Guid(playerVM.Id));
+            Player player = Database.Players.Get(Guid.Parse(playerVM.Id));
             if (player.Balance < bet)
                 throw new ValidationException("Недостаточно средств на счету", "Bet");
             else

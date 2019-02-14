@@ -13,7 +13,7 @@ namespace BlackJack.BLL.Interfaces
         IEnumerable<GameViewModel> GetGamesForPlayer(string playerId);
         IEnumerable<GameViewModel> GetGames();
         void StopGame();
-        void PlaceABet(PlayerViewModel playerVM, int bet);
+        void PlaceABet(PlayerViewModel playerVM, decimal bet);
         void Hit(PlayerViewModel playerVM);
         void Stand(PlayerViewModel playerVM, DealerViewModel dealerVM);
         void Dispose();

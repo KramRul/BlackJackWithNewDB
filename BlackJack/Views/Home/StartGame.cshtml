@@ -4,4 +4,34 @@
 @model BlackJack.BLL.Models.PlayerViewModel
 <h2>Start Game</h2>
 <h2>User: @Model.UserName</h2>
+<hr />
+<h3>Balance: @Model.Balance, Bet: @Model.Bet</h3>
+<hr />
+
+<hr />
+@if (Model.Bet == 0)
+{
+    <form method="post" asp-controller="Home" asp-action="PlaceABet">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div>
+            <input asp-for="UserName" hidden />
+            <input asp-for="Id" hidden />
+            <input asp-for="Balance" hidden />
+            <label asp-for="Bet"></label><br />
+            <input asp-for="Bet" />
+            <span asp-validation-for="Bet"></span>
+        </div>
+        <div>
+            <input type="submit" value="Регистрация" />
+        </div>
+    </form>
+    <button type="button" class="btn btn-primary btn-lg" hidden>Hit</button>
+    <button type="button" class="btn btn-primary btn-lg" hidden>Hit</button>
+    <button type="button" class="btn btn-secondary btn-lg" hidden>Stand</button>
+}
+else
+{
+    <button type="button" class="btn btn-primary btn-lg">Hit</button>
+    <button type="button" class="btn btn-secondary btn-lg">Stand</button>
+}
 
