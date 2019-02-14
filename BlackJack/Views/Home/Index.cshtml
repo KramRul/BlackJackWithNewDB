@@ -3,6 +3,7 @@
 }
 @model IEnumerable<BlackJack.DAL.Entities.Player>
 <form method="post" asp-controller="Home" asp-action="StartGame">
+    <div asp-validation-summary="All"></div>
     <div class="form-group">
         <label for="exampleFormControlSelect1">Выберите количество ботов</label>
         <select class="form-control" id="countOfBots" name="countOfBots">

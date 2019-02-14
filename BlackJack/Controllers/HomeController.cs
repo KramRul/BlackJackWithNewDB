@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using BlackJack.BLL.Infrastructure;
 using BlackJack.BLL.Interfaces;
 using BlackJack.BLL.Models;
 using BlackJack.DAL.Entities;
@@ -36,14 +37,49 @@ namespace BlackJack.Controllers
         [HttpPost]
         public async Task<IActionResult> StartGame(int countOfBots, string player)
         {
-            Player user = await _userManager.FindByNameAsync(player);
-            if (user == null)
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (player == null) throw new ValidationException("Имя не должно быть пустым","");
+                    Player user = await _userManager.FindByNameAsync(player);
+                    if (user == null)
+                    {
+                        return RedirectToAction("Register", "User");
+                    }
+                    PlayerViewModel model = new PlayerViewModel { Id = user.Id, UserName = user.UserName };
+                    _gameService.StartGame(model, countOfBots);
+                    return RedirectToAction("StartGame", "Home", model);
+                }
+                return View();
+            }
+            catch (ValidationException ex)
+            {
+                return RedirectToAction("Index", "Home", ex.Property);
+            }
+            catch
             {
                 return RedirectToAction("Index", "Home");
-            } 
-            PlayerViewModel model = new PlayerViewModel { Id = user.Id, UserName = user.UserName };
-            _gameService.StartGame(model, countOfBots);
-            return View();
+            }
+
+        }
+
+        [HttpGet]
+        public IActionResult StartGame(PlayerViewModel player)
+        {
+            try
+            {
+                return View(player);
+            }
+            catch (ValidationException ex)
+            {
+                return RedirectToAction("Index", "Home", ex.Property);
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
         }
 
         [HttpGet]
