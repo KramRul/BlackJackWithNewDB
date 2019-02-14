@@ -1,0 +1,23 @@
+﻿@model BlackJack.BLL.Models.BotViewModel
+@{
+    ViewBag.Title = "Редактирование бота";
+}
+<form asp-action="Edit" asp-controller="Bot">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Id" class="control-label">Bot Id</label>
+        <input type="text" asp-for="Id" class="form-control" readonly/>
+    </div>
+    <div class="form-group">
+        <label asp-for="Balance" class="control-label">Balance</label>
+        <input type="text" asp-for="Balance" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Bet" class="control-label">Bet</label>
+        <input type="text" asp-for="Bet" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Сохранить" class="btn btn-default" />
+    </div>
+</form>
+

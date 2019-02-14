@@ -5,6 +5,7 @@ using BlackJack.DAL.Entities;
 using BlackJack.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BlackJack.BLL.Services
@@ -20,16 +21,14 @@ namespace BlackJack.BLL.Services
             Database = uow;
         }
 
-        public void StartGame(PlayerViewModel playerVM, GameViewModel gameVM)
+        public void StartGame(PlayerViewModel playerVM, int countOfBots)
         {
+
             GameState = GameState.Unknown;
-            Player player = Database.Players.Get(new Guid(playerVM.Id));
-            Game game = Database.Games.Get(gameVM.Id);
+            Player player = Database.Players.Get(Guid.Parse(playerVM.Id));
+            Game game = new Game() { Player=player, Dealer=new Dealer() };
 
-            //???
-            game.Player = player;
-
-            Database.Games.Update(game);
+            Database.Games.Create(game);
             Database.Players.Update(player);
             Database.Save();
         }
@@ -295,12 +294,13 @@ namespace BlackJack.BLL.Services
         public IEnumerable<GameViewModel> GetGames()
         {
             List<GameViewModel> pl = new List<GameViewModel>();
-            foreach (var item in Database.Games.GetAll())
+            foreach (var item in Database.Games.GetAll().ToList())
             {
                 pl.Add(new GameViewModel()
                 {
                     Id = item.Id,
-                    Player = item.Player
+                    Player = item.Player,
+                    Dealer = item.Dealer
                 });
             }
             return pl;

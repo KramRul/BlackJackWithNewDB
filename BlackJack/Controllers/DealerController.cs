@@ -13,18 +13,10 @@ namespace BlackJack.Controllers
 {
     public class DealerController : Controller
     {
-        private readonly UserManager<Player> _userManager;
-        private readonly SignInManager<Player> _signInManager;
-        private readonly IGameService _gameService;
-        private readonly IUserService _userService;
         private readonly IDealerService _dealerService;
 
-        public DealerController(UserManager<Player> userManager, SignInManager<Player> signInManager, IGameService gameService, IUserService userService, IDealerService dealerService)
+        public DealerController(IDealerService dealerService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _gameService = gameService;
-            _userService = userService;
             _dealerService = dealerService;
         }
 

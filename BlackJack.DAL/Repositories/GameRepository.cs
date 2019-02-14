@@ -20,7 +20,7 @@ namespace BlackJack.DAL.Repositories
 
         public IEnumerable<Game> GetAll()
         {
-            return db.Games;
+            return db.Games.Include(d=>d.Player).Include(d=>d.Dealer);
         }
 
         public Game Get(Guid id)

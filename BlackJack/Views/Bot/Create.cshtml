@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Register";
+}
+@model BlackJack.BLL.Models.BotViewModel
+
+<h2>Создание нового бота</h2>
+<form method="post" asp-controller="Bot" asp-action="Create">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="Id"></label><br />
+        <input asp-for="Id" />
+        <span asp-validation-for="Id"></span>
+    </div>
+    <div>
+        <input type="submit" value="Создать" />
+    </div>
+</form>
+

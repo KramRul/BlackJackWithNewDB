@@ -25,7 +25,7 @@ namespace BlackJack.DAL.Repositories
 
         public Player Get(Guid id)
         {
-            return db.Users.Find(id);
+            return db.Users.Find(id.ToString());
         }
 
         public void Create(Player player)

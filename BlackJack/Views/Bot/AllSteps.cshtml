@@ -1,0 +1,19 @@
+﻿@model IEnumerable<BlackJack.BLL.Models.BotStepViewModel>
+@{
+    ViewBag.Title = "Список шагов бота";
+}
+
+<table class="table">
+    <tr><th>Step Id</th><th>Bot Id</th><th>Game Id</th><th>Suite</th><th>Rank</th></tr>
+    @foreach (var step in Model)
+    {
+    <tr>
+        <td>@step.Id</td>
+        <td>@step.BotId</td>
+        <td>@step.GameId</td>
+        <td>@step.Suite</td>
+        <td>@step.Rank</td>
+    </tr>
+    }
+</table>
+

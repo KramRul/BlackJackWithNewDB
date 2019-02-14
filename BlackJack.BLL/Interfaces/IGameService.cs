@@ -7,7 +7,7 @@ namespace BlackJack.BLL.Interfaces
 {
     public interface IGameService
     {
-        void StartGame(PlayerViewModel playerVM, GameViewModel gameVM);
+        void StartGame(PlayerViewModel playerVM, int countOfBots);
         void DeleteGame(Guid gameId);
         IEnumerable<GameViewModel> GetGamesForPlayer(string playerId);
         IEnumerable<GameViewModel> GetGames();

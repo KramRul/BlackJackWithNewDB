@@ -9,6 +9,8 @@ namespace BlackJack.BLL.Interfaces
     {
         void Create(BotViewModel botVM);
 
+        BotViewModel GetBot(Guid botId);
+
         IEnumerable<BotStepViewModel> GetAllSteps(Guid botId);
 
         IEnumerable<BotViewModel> GetAllBots();

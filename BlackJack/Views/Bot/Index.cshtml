@@ -1,0 +1,28 @@
+﻿@model IEnumerable<BlackJack.BLL.Models.BotViewModel>
+@{
+    ViewBag.Title = "Список ботов";
+}
+
+    <a asp-action="Create">Добавить бота</a>
+
+    <table class="table">
+        <tr><th>Bot ID</th><th>Balance</th><th>Bet</th></tr>
+        @foreach (var bot in Model)
+    {
+        <tr>
+            <td>@bot.Id</td>
+            <td>@bot.Balance</td>
+            <td>@bot.Bet</td>
+            <td>
+                <form asp-action="Delete" asp-controller="Bot" asp-route-id="@bot.Id" method="post">
+                    <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@bot.Id">Изменить</a>
+                    <a class="btn btn-sm btn-primary" asp-action="AllSteps" asp-route-id="@bot.Id">Шаги</a>
+                    <button type="submit" class="btn btn-sm btn-danger">
+                        Удалить
+                    </button>
+                </form>
+            </td>
+        </tr>
+    }
+    </table>
+
