@@ -48,7 +48,9 @@ namespace BlackJack.Controllers
                         return RedirectToAction("Register", "User");
                     }
                     PlayerViewModel model = new PlayerViewModel { Id = user.Id, UserName = user.UserName, Balance=user.Balance, Bet=user.Bet};
-                    GameViewModel gVM = _gameService.StartGame(model, countOfBots);
+                    GameViewModel gVM=null;
+                    //if (_gameService.GetGamesForPlayer(user.Id).Count()==0)
+                        gVM = _gameService.StartGame(model, countOfBots);
                     GameDetailsViewModel gameDetailsVM = new GameDetailsViewModel()
                     {
                         Game = gVM,
@@ -89,13 +91,13 @@ namespace BlackJack.Controllers
         }
 
         [HttpPost]
-        public void PlaceABet(decimal Bet, string Id, string UserName, decimal Balance)
+        public void PlaceABet(decimal Bet, string Id, string UserName, decimal Balance, string GameId)
         {
             try
             {
                 Console.WriteLine(Bet);
                 Console.WriteLine(Id);
-                PlayerViewModel VM = new PlayerViewModel() { Id = Id, UserName = UserName, Balance = Balance, Bet = Bet };
+                PlayerViewModel VM = new PlayerViewModel() { Id = Id, UserName = UserName, Balance = Balance, Bet = Bet};
                 _gameService.PlaceABet(VM, Bet);
                 //return RedirectToAction("StartGame", "Home", VM);
             }

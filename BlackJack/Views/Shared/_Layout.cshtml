@@ -45,17 +45,25 @@
             var id = $('#Id')[0].value;
             var balance = $('#Balance')[0].value;
             var bet = $('#Bet')[0].value;
-            PlaceABetFunc(userName, id, balance, bet);
+            var gameId = $('#GameId')[0].value;
+            PlaceABetFunc(userName, id, balance, bet, gameId);
         });
 
-        function PlaceABetFunc(userName, id, balance, bet) {
+        function PlaceABetFunc(userName, id, balance, bet, gameId) {
             $.ajax({
                 type: 'POST',
                 url: PlaceAbetPath,
-                data: { 'UserName': userName, 'Id': id, 'Balance': balance, 'Bet': bet },
+                data: { 'UserName': userName, 'Id': id, 'Balance': balance, 'Bet': bet, 'GameId': gameId},
                 success: function (data) {
                     console.log("good");
-                    location.reload();
+                    $('#PlayerBalance')[0].value = balance - bet;
+                    $('#PlayerBet')[0].value = bet;
+                    $('#LabelBet').hide();
+                    $('#Bet').hide();
+                    $('#formPlaceAbet').hide();
+                    $('#ButtonHit').show();
+                    $('#ButtonStand').show();
+                    //location.reload();
                 },
                 error: function (data) {
                     alert(data.responseJSON);

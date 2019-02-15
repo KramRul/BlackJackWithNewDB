@@ -27,6 +27,9 @@ namespace BlackJack.BLL.Services
             GameState = GameState.Unknown;
             Player player = Database.Players.Get(Guid.Parse(playerVM.Id));
 
+            Database.PlayerSteps.Create(CreatePlayerStep(player));
+            Database.PlayerSteps.Create(CreatePlayerStep(player));
+
             Dealer dealer = new Dealer();
             Database.DealerSteps.Create(CreateDealerStep(dealer));
             Database.DealerSteps.Create(CreateDealerStep(dealer));
@@ -77,6 +80,12 @@ namespace BlackJack.BLL.Services
         {
             Random rnd = new Random();
             return new DealerStep() { Dealer = dealer, Rank = (Rank)rnd.Next(1, 13), Suite= (Suite)rnd.Next(1, 4) };
+        }
+
+        private PlayerStep CreatePlayerStep(Player player)
+        {
+            Random rnd = new Random();
+            return new PlayerStep() { Player = player, Rank = (Rank)rnd.Next(1, 13), Suite = (Suite)rnd.Next(1, 4) };
         }
 
         private int TotalValue(IEnumerable<PlayerStep> playerSteps)

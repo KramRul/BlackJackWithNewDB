@@ -5,32 +5,26 @@
 <h2>Start Game</h2>
 <h2>User: @Model.Game.Player.UserName</h2>
 <hr />
-<h3>Balance: @Model.Game.Player.Balance, Bet: @Model.Game.Player.Bet</h3>
+<div>Balance: <input value="@Model.Game.Player.Balance" name="PlayerBalance" id="PlayerBalance" disabled/>, Bet: <input value="@Model.Game.Player.Bet" name="PlayerBet" id="PlayerBet" disabled/></div>
 <hr />
 @Html.Partial("_GetDealerSteps", Model.DealerStepVM)
 @Html.Partial("_GetPlayerSteps", Model.PlayerStepVM)
 <hr />
+<input type="hidden" name="GameId" id="GameId" value="@Model.Game.Id">
+<input type="hidden" name="PlaceAbetPath" id="PlaceAbetPath" data-place-A-Bet="@Url.Action("PlaceABet", "Home")">
 @if (Model.Game.Player.Bet == 0)
 {
         <div>
             <input value="@Model.Game.Player.UserName" name="UserName" id="UserName" hidden />
             <input value="@Model.Game.Player.Id" name="Id" id="Id" hidden />
             <input value="@Model.Game.Player.Balance" name="Balance" id="Balance" hidden />
-            <label value="@Model.Game.Player.Bet"></label><br />
+            <label value="@Model.Game.Player.Bet" name="LabelBet" id="LabelBet"></label><br />
             <input value="@Model.Game.Player.Bet" name="Bet" id="Bet"/>
         </div>
         <div>
             <input id="formPlaceAbet" type="button" value="Bet" class="btn btn-secondary btn-lg" />
         </div>
-    <input type="hidden" name="PlaceAbetPath" id="PlaceAbetPath" data-place-A-Bet="@Url.Action("PlaceABet", "Home")">
-    <button type="button" class="btn btn-primary btn-lg" hidden>Hit</button>
-    <button type="button" class="btn btn-primary btn-lg" hidden>Hit</button>
-    <button type="button" class="btn btn-secondary btn-lg" hidden>Stand</button>
+    
 }
-else
-{
-    <input type="hidden" name="PlaceAbetPath" id="PlaceAbetPath" data-place-A-Bet="@Url.Action("PlaceABet", "Home")">
-    <a class="btn btn-primary btn-lg" asp-controller="Home" asp-action="Hit" asp-route-id="@Model.Game.Player.Id">Hit</a>
-    <button type="button" class="btn btn-secondary btn-lg">Stand</button>
-}
-    <button type="button" name="Take" id="Take" class="btn btn-secondary btn-lg">test</button>
+    <button type="button" class="btn btn-primary btn-lg" name="ButtonHit" id="ButtonHit" hidden>Hit</button>
+    <button type="button" class="btn btn-secondary btn-lg" name="ButtonStand" id="ButtonStand" hidden>Stand</button>

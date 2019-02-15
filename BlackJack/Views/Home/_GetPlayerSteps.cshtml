@@ -3,9 +3,11 @@
     <tr><th>User Name</th><th>StepId</th></tr>
     @foreach (var step in Model)
     {
-        <tr>
-            <td>@step.Player.UserName</td>
-            <td>@step.Id</td>
-        </tr>
+    <tr>
+        <td>@step.Player.UserName</td>
+        <td>@step.Id</td>
+        <td>@step.Suite</td>
+        <td>@step.Rank</td>
+    </tr>
     }
 </table>
