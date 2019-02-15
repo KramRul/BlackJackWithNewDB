@@ -48,8 +48,14 @@ namespace BlackJack.Controllers
                         return RedirectToAction("Register", "User");
                     }
                     PlayerViewModel model = new PlayerViewModel { Id = user.Id, UserName = user.UserName, Balance=user.Balance, Bet=user.Bet};
-                    _gameService.StartGame(model, countOfBots);
-                    return RedirectToAction("StartGame", "Home", model);
+                    GameViewModel gVM = _gameService.StartGame(model, countOfBots);
+                    GameDetailsViewModel gameDetailsVM = new GameDetailsViewModel()
+                    {
+                        Game = gVM,
+                        DealerStepVM = _dealerService.GetAllSteps(gVM.Dealer.Id),
+                        PlayerStepVM = _userService.GetAllSteps(gVM.Player.Id)
+                    };
+                    return View(gameDetailsVM);//StartGame
                 }
                 return View();
             }
@@ -65,11 +71,11 @@ namespace BlackJack.Controllers
         }
 
         [HttpGet]
-        public IActionResult StartGame(PlayerViewModel player)
+        public IActionResult StartGame(GameViewModel gameVM)
         {
             try
             {
-                return View(player);
+                return View(gameVM);
             }
             catch (ValidationException ex)
             {
@@ -83,13 +89,35 @@ namespace BlackJack.Controllers
         }
 
         [HttpPost]
-        public IActionResult PlaceABet(decimal Bet, string Id, string UserName, decimal Balance)
+        public void PlaceABet(decimal Bet, string Id, string UserName, decimal Balance)
         {
             try
             {
+                Console.WriteLine(Bet);
+                Console.WriteLine(Id);
                 PlayerViewModel VM = new PlayerViewModel() { Id = Id, UserName = UserName, Balance = Balance, Bet = Bet };
                 _gameService.PlaceABet(VM, Bet);
-                return RedirectToAction("StartGame", "Home", VM);
+                //return RedirectToAction("StartGame", "Home", VM);
+            }
+            catch (ValidationException ex)
+            {
+                //return RedirectToAction("Index", "Home", ex.Property);
+            }
+            catch
+            {
+                //return RedirectToAction("Index", "Home");
+            }
+
+        }
+
+        [HttpPost]
+        public IActionResult Hit(string Id)
+        {
+            try
+            {
+                /*PlayerViewModel VM = new PlayerViewModel() { Id = Id, UserName = UserName, Balance = Balance, Bet = Bet };
+                _gameService.PlaceABet(VM, Bet);*/
+                return RedirectToAction("StartGame", "Home"/*, VM*/);
             }
             catch (ValidationException ex)
             {

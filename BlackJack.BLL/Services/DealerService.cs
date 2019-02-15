@@ -41,7 +41,7 @@ namespace BlackJack.BLL.Services
             List<DealerStepViewModel> pl = new List<DealerStepViewModel>();
             foreach (var item in Database.DealerSteps.GetAll())
             {
-                if (item.Id == dealerId)
+                if (item.DealerId == dealerId)
                 {
                     pl.Add(new DealerStepViewModel()
                     {

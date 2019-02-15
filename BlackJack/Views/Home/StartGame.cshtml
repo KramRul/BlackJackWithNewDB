@@ -1,37 +1,36 @@
 ﻿@{
     ViewData["Title"] = "StartGame";
 }
-@model BlackJack.BLL.Models.PlayerViewModel
+@model BlackJack.BLL.Models.GameDetailsViewModel
 <h2>Start Game</h2>
-<h2>User: @Model.UserName</h2>
+<h2>User: @Model.Game.Player.UserName</h2>
 <hr />
-<h3>Balance: @Model.Balance, Bet: @Model.Bet</h3>
+<h3>Balance: @Model.Game.Player.Balance, Bet: @Model.Game.Player.Bet</h3>
 <hr />
-
+@Html.Partial("_GetDealerSteps", Model.DealerStepVM)
+@Html.Partial("_GetPlayerSteps", Model.PlayerStepVM)
 <hr />
-@if (Model.Bet == 0)
+@if (Model.Game.Player.Bet == 0)
 {
-    <form method="post" asp-controller="Home" asp-action="PlaceABet">
-        <div asp-validation-summary="ModelOnly"></div>
         <div>
-            <input asp-for="UserName" hidden />
-            <input asp-for="Id" hidden />
-            <input asp-for="Balance" hidden />
-            <label asp-for="Bet"></label><br />
-            <input asp-for="Bet" />
-            <span asp-validation-for="Bet"></span>
+            <input value="@Model.Game.Player.UserName" name="UserName" id="UserName" hidden />
+            <input value="@Model.Game.Player.Id" name="Id" id="Id" hidden />
+            <input value="@Model.Game.Player.Balance" name="Balance" id="Balance" hidden />
+            <label value="@Model.Game.Player.Bet"></label><br />
+            <input value="@Model.Game.Player.Bet" name="Bet" id="Bet"/>
         </div>
         <div>
-            <input type="submit" value="Регистрация" />
+            <input id="formPlaceAbet" type="button" value="Bet" class="btn btn-secondary btn-lg" />
         </div>
-    </form>
+    <input type="hidden" name="PlaceAbetPath" id="PlaceAbetPath" data-place-A-Bet="@Url.Action("PlaceABet", "Home")">
     <button type="button" class="btn btn-primary btn-lg" hidden>Hit</button>
     <button type="button" class="btn btn-primary btn-lg" hidden>Hit</button>
     <button type="button" class="btn btn-secondary btn-lg" hidden>Stand</button>
 }
 else
 {
-    <button type="button" class="btn btn-primary btn-lg">Hit</button>
+    <input type="hidden" name="PlaceAbetPath" id="PlaceAbetPath" data-place-A-Bet="@Url.Action("PlaceABet", "Home")">
+    <a class="btn btn-primary btn-lg" asp-controller="Home" asp-action="Hit" asp-route-id="@Model.Game.Player.Id">Hit</a>
     <button type="button" class="btn btn-secondary btn-lg">Stand</button>
 }
-
+    <button type="button" name="Take" id="Take" class="btn btn-secondary btn-lg">test</button>

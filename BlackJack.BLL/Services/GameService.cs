@@ -21,12 +21,17 @@ namespace BlackJack.BLL.Services
             Database = uow;
         }
 
-        public void StartGame(PlayerViewModel playerVM, int countOfBots)
+        public GameViewModel StartGame(PlayerViewModel playerVM, int countOfBots)
         {
 
             GameState = GameState.Unknown;
             Player player = Database.Players.Get(Guid.Parse(playerVM.Id));
-            Game game = new Game() { Player=player, Dealer=new Dealer() };
+
+            Dealer dealer = new Dealer();
+            Database.DealerSteps.Create(CreateDealerStep(dealer));
+            Database.DealerSteps.Create(CreateDealerStep(dealer));
+            DealerStep dealerStep = CreateDealerStep(dealer);
+            Game game = new Game() { Player=player, Dealer= dealer };
 
             if (countOfBots > 0)
             {
@@ -36,10 +41,11 @@ namespace BlackJack.BLL.Services
                     Database.BotSteps.Create(botStep);
                 }
             }
-
+           
             Database.Games.Create(game);
             Database.Players.Update(player);
             Database.Save();
+            return new GameViewModel() { Id=game.Id, Dealer=game.Dealer, Player=game.Player};
         }
 
         public void DeleteGame(Guid gameId)
@@ -67,11 +73,11 @@ namespace BlackJack.BLL.Services
             Database.Save();
         }
 
-        /*private Card GetStep()
+        private DealerStep CreateDealerStep(Dealer dealer)
         {
             Random rnd = new Random();
-            return new Card() { Rank = (Rank)rnd.Next(1, 13), Suite= (Suite)rnd.Next(1, 4) };
-        }*/
+            return new DealerStep() { Dealer = dealer, Rank = (Rank)rnd.Next(1, 13), Suite= (Suite)rnd.Next(1, 4) };
+        }
 
         private int TotalValue(IEnumerable<PlayerStep> playerSteps)
         {

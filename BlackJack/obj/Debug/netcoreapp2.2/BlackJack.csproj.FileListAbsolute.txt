@@ -45,3 +45,5 @@ C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack\obj\Debug\netco
 C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack\obj\Debug\netcoreapp2.2\Razor\Views\Home\StartGame.g.cshtml.cs
 C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack\obj\Debug\netcoreapp2.2\Razor\Views\Home\AllGames.g.cshtml.cs
 C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack\obj\Debug\netcoreapp2.2\Razor\Views\Home\Details.g.cshtml.cs
+C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack\obj\Debug\netcoreapp2.2\Razor\Views\Home\_GetDealerSteps.g.cshtml.cs
+C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack\obj\Debug\netcoreapp2.2\Razor\Views\Home\_GetPlayerSteps.g.cshtml.cs
