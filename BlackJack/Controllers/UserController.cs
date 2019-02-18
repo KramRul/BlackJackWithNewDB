@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using BlackJack.BLL.Auth;
 using BlackJack.BLL.Interfaces;
 using BlackJack.BLL.Models;
 using BlackJack.BLL.Services;
@@ -10,6 +13,8 @@ using BlackJack.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace BlackJack.Controllers
 {
@@ -48,13 +53,14 @@ namespace BlackJack.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(PlayerViewModel model)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                Player user = new Player {UserName = model.UserName, Balance=1000};
+                Player user = new Player {UserName = model.UserName, Balance=1000, PasswordHash=model.Password};
+
                 // добавляем пользователя
-                var result = await _userManager.CreateAsync(user);
+                var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     // установка куки
@@ -70,6 +76,61 @@ namespace BlackJack.Controllers
                 }
             }
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Player user = new Player { UserName = model.UserName, Balance = 1000 };
+
+                var identity = GetIdentity(model.UserName, model.PasswordHash);
+                if (identity == null)
+                {
+                    Response.StatusCode = 400;
+                    await Response.WriteAsync("Invalid username or password.");
+                    ModelState.AddModelError(string.Empty, "Invalid username or password.");
+                }
+
+                JwtFactory jwtFactory = new JwtFactory();
+
+                var encodedJwt = jwtFactory.GenerateEncodedToken(model.UserName, identity);
+
+                var response = new
+                {
+                    access_token = encodedJwt,
+                    username = identity.Name
+                };
+
+                // сериализация ответа
+                Response.ContentType = "application/json";
+                await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
+
+                
+            }
+            return View(model);
+        }
+
+        private ClaimsIdentity GetIdentity(string username, string password)
+        {
+            Player player = _userManager.Users.FirstOrDefault(x => x.UserName == username && x.PasswordHash == password);
+            if (player != null)
+            {
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, player.UserName),
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, player.PasswordHash)
+                };
+                ClaimsIdentity claimsIdentity =
+                new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
+                    ClaimsIdentity.DefaultRoleClaimType);
+                return claimsIdentity;
+            }
+
+            // если пользователя не найдено
+            return null;
         }
 
         // GET: User/Edit/5

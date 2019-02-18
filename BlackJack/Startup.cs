@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BlackJack.BLL.Interfaces;
+using BlackJack.BLL.Models;
 using BlackJack.BLL.Services;
 using BlackJack.DAL.EF;
 using BlackJack.DAL.Entities;
 using BlackJack.DAL.Interfaces;
 using BlackJack.DAL.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -16,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BlackJack
 {
@@ -43,9 +46,34 @@ namespace BlackJack
                 options.UseSqlServer(connection, b => b.MigrationsAssembly("BlackJack")));
             services.AddIdentity<Player, IdentityRole > (options =>
             {
-                options.User.RequireUniqueEmail = false;
+                //options.User.RequireUniqueEmail = false;
             }).AddEntityFrameworkStores<ApplicationContext>()
             .AddDefaultTokenProviders();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        // укзывает, будет ли валидироваться издатель при валидации токена
+                        ValidateIssuer = true,
+                        // строка, представляющая издателя
+                        ValidIssuer = AuthOptions.ISSUER,
+
+                        // будет ли валидироваться потребитель токена
+                        ValidateAudience = true,
+                        // установка потребителя токена
+                        ValidAudience = AuthOptions.AUDIENCE,
+                        // будет ли валидироваться время существования
+                        ValidateLifetime = true,
+
+                        // установка ключа безопасности
+                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                        // валидация ключа безопасности
+                        ValidateIssuerSigningKey = true,
+                    };
+                });
 
             services.AddTransient<IUnitOfWork, EFUnitOfWork>();
             services.AddTransient<IGameService, GameService>();

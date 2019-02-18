@@ -10,3 +10,6 @@ C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack.BLL\obj\Debug\n
 C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack.BLL\obj\Debug\netcoreapp2.1\BlackJack.BLL.csproj.CopyComplete
 C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack.BLL\obj\Debug\netcoreapp2.1\BlackJack.BLL.dll
 C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack.BLL\obj\Debug\netcoreapp2.1\BlackJack.BLL.pdb
+C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack.BLL\bin\Debug\netcoreapp2.1\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack.BLL\bin\Debug\netcoreapp2.1\System.IdentityModel.Tokens.Jwt.pdb
+C:\Users\Anuitex - 62\source\repos\Projects1\BlackJack\BlackJack.BLL\bin\Debug\netcoreapp2.1\System.IdentityModel.Tokens.Jwt.xml
