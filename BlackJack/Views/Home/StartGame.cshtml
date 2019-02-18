@@ -5,26 +5,27 @@
 <h2>Start Game</h2>
 <h2>User: @Model.Game.Player.UserName</h2>
 <hr />
-<div>Balance: <input value="@Model.Game.Player.Balance" name="PlayerBalance" id="PlayerBalance" disabled/>, Bet: <input value="@Model.Game.Player.Bet" name="PlayerBet" id="PlayerBet" disabled/></div>
+<div>Balance: <input value="@Model.Game.Player.Balance" name="PlayerBalance" id="PlayerBalance" disabled /> Bet: <input value="@Model.Game.Player.Bet" name="PlayerBet" id="PlayerBet" disabled /></div>
 <hr />
 @Html.Partial("_GetDealerSteps", Model.DealerStepVM)
 @Html.Partial("_GetPlayerSteps", Model.PlayerStepVM)
 <hr />
 <input type="hidden" name="GameId" id="GameId" value="@Model.Game.Id">
+<input value="@Model.Game.Player.UserName" name="UserName" id="UserName" hidden />
+<input value="@Model.Game.Player.Id" name="Id" id="Id" hidden />
 <input type="hidden" name="PlaceAbetPath" id="PlaceAbetPath" data-place-A-Bet="@Url.Action("PlaceABet", "Home")">
+<input type="hidden" name="HitPath" id="HitPath" data-hit="@Url.Action("Hit", "Home")">
 @if (Model.Game.Player.Bet == 0)
 {
-        <div>
-            <input value="@Model.Game.Player.UserName" name="UserName" id="UserName" hidden />
-            <input value="@Model.Game.Player.Id" name="Id" id="Id" hidden />
-            <input value="@Model.Game.Player.Balance" name="Balance" id="Balance" hidden />
-            <label value="@Model.Game.Player.Bet" name="LabelBet" id="LabelBet"></label><br />
-            <input value="@Model.Game.Player.Bet" name="Bet" id="Bet"/>
-        </div>
-        <div>
-            <input id="formPlaceAbet" type="button" value="Bet" class="btn btn-secondary btn-lg" />
-        </div>
-    
+    <div>
+        <input value="@Model.Game.Player.Balance" name="Balance" id="Balance" hidden />
+        <label value="@Model.Game.Player.Bet" name="LabelBet" id="LabelBet"></label><br />
+        <input value="@Model.Game.Player.Bet" name="Bet" id="Bet" />
+    </div>
+    <div>
+        <input id="formPlaceAbet" type="button" value="Bet" class="btn btn-secondary btn-lg" />
+    </div>
+
 }
-    <button type="button" class="btn btn-primary btn-lg" name="ButtonHit" id="ButtonHit" hidden>Hit</button>
-    <button type="button" class="btn btn-secondary btn-lg" name="ButtonStand" id="ButtonStand" hidden>Stand</button>
+<input type="button" class="btn btn-primary btn-lg" name="ButtonHit" id="ButtonHit" value="Hit" />
+<input type="button" class="btn btn-secondary btn-lg" name="ButtonStand" id="ButtonStand" value="Stand" />

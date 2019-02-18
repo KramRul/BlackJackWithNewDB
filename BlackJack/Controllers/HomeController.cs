@@ -113,21 +113,21 @@ namespace BlackJack.Controllers
         }
 
         [HttpPost]
-        public IActionResult Hit(string Id)
+        public void Hit(string Id, string UserName, string GameId)
         {
             try
             {
-                /*PlayerViewModel VM = new PlayerViewModel() { Id = Id, UserName = UserName, Balance = Balance, Bet = Bet };
-                _gameService.PlaceABet(VM, Bet);*/
-                return RedirectToAction("StartGame", "Home"/*, VM*/);
+                PlayerViewModel VM = new PlayerViewModel() { Id = Id, UserName = UserName };
+                _gameService.Hit(VM, GameId);
+                //return RedirectToAction("StartGame", "Home"/*, VM*/);
             }
             catch (ValidationException ex)
             {
-                return RedirectToAction("Index", "Home", ex.Property);
+                //return RedirectToAction("Index", "Home", ex.Property);
             }
             catch
             {
-                return RedirectToAction("Index", "Home");
+                //return RedirectToAction("Index", "Home");
             }
 
         }

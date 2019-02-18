@@ -58,16 +58,16 @@ namespace BlackJack.BLL.Services
             Database.Save();
         }
 
-        public void Hit(PlayerViewModel playerVM)
+        public void Hit(PlayerViewModel playerVM, Guid gameId)
         {
-            Player player = Database.Players.Get(new Guid(playerVM.Id));
+            Player player = Database.Players.Get(Guid.Parse(playerVM.Id));
 
             Random rnd = new Random();
             var playerStep = new PlayerStep() { Player = player, PlayerId = player.Id, Rank= (Rank)rnd.Next(1, 13), Suite = (Suite)rnd.Next(1, 4) };
             Database.PlayerSteps.Create(playerStep);
             Database.Save();
 
-            if (TotalValue(Database.PlayerSteps.GetAll()) > 21)
+            if (TotalValue(Database.PlayerSteps.GetAll().Where(p=>p.PlayerId==playerVM.Id)) > 21)
             {
                 player.Balance -= player.Bet;
                 GameState = GameState.DealerWon;

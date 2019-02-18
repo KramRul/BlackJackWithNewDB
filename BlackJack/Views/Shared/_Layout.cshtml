@@ -35,9 +35,23 @@
             integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     <script>
         var PlaceAbetPath = $('#PlaceAbetPath').data("placeABet");
+        var HitPath = $('#HitPath').data("hit");
 
         $('#Take').on('click', function OneCard() {
             alert(PlaceAbetPath);
+        });
+
+        $(document).ready(function () {
+            if ($('#PlayerBet')[0].value == 0) {
+                $('#ButtonHit').hide();
+                $('#ButtonStand').hide();
+            } else 
+            {
+                $('#ButtonHit').show();
+                $('#ButtonStand').show();
+            }
+                
+
         });
 
         $("#formPlaceAbet").on('click', function () {
@@ -47,6 +61,14 @@
             var bet = $('#Bet')[0].value;
             var gameId = $('#GameId')[0].value;
             PlaceABetFunc(userName, id, balance, bet, gameId);
+        });
+
+        $("#ButtonHit").on('click', function () {
+            var userName = $('#UserName')[0].value;
+            var id = $('#Id')[0].value;
+
+            var gameId = $('#GameId')[0].value;
+            PlayerHit(userName, id, gameId);
         });
 
         function PlaceABetFunc(userName, id, balance, bet, gameId) {
@@ -63,6 +85,22 @@
                     $('#formPlaceAbet').hide();
                     $('#ButtonHit').show();
                     $('#ButtonStand').show();
+                    //location.reload();
+                },
+                error: function (data) {
+                    alert(data.responseJSON);
+                }
+            })
+        }
+
+        function PlayerHit(userName, id, gameId) {
+            $.ajax({
+                type: 'POST',
+                url: HitPath,
+                data: { 'UserName': userName, 'Id': id, 'GameId': gameId },
+                success: function (data) {
+                    console.log("hit good");
+                    
                     //location.reload();
                 },
                 error: function (data) {
