@@ -13,6 +13,8 @@ namespace BlackJack.BLL.Interfaces
 
         IEnumerable<BotStepViewModel> GetAllSteps(Guid botId);
 
+        IEnumerable<BotStepViewModel> GetAllSteps();
+
         IEnumerable<BotViewModel> GetAllBots();
 
         void Edit(BotViewModel botVM);

@@ -36,6 +36,7 @@
     <script>
         var PlaceAbetPath = $('#PlaceAbetPath').data("placeABet");
         var HitPath = $('#HitPath').data("hit");
+        var StandPath = $('#StandPath').data("stand");
 
         $('#Take').on('click', function OneCard() {
             alert(PlaceAbetPath);
@@ -71,6 +72,14 @@
             PlayerHit(userName, id, gameId);
         });
 
+        $("#ButtonStand").on('click', function () {
+            var userName = $('#UserName')[0].value;
+            var id = $('#Id')[0].value;
+
+            var gameId = $('#GameId')[0].value;
+            PlayerStand(userName, id, gameId);
+        });
+
         function PlaceABetFunc(userName, id, balance, bet, gameId) {
             $.ajax({
                 type: 'POST',
@@ -104,9 +113,32 @@
                     var gameState = data.game.gameState;
                     var dataSuite = data.playerStepVM.suite;
                     var dataRank = data.playerStepVM.rank;
-                    $('#TablePlayerStepsInGame tbody:last').append("<tr>" + "<td></td>" + "<td></td>" + "<td>" + dataRank + "</td>" + "<td>" + dataSuite + "</td></tr>");
+                    $('#TablePlayerStepsInGame tbody:last').append("<tr>" + "<td></td>" + "<td></td>" + "<td>" + dataSuite + "</td>" + "<td>" + dataRank + "</td></tr>");
                     $('#GameState')[0].value = gameState;
                     if ($('#GameState')[0].value == 2) $('#ButtonHit').hide();
+                    //location.reload();
+                },
+                error: function (data) {
+                    alert(data.responseJSON);
+                }
+            })
+        }
+
+        function PlayerStand(userName, id, gameId) {
+            $.ajax({
+                type: 'POST',
+                url: StandPath,
+                data: { 'UserName': userName, 'Id': id, 'GameId': gameId },
+                success: function (data) {
+                    console.log("stand good");
+                    console.log(data);
+                    var gameState = data.game.gameState;
+                    /*var dataSuite = data.playerStepVM.suite;
+                    var dataRank = data.playerStepVM.rank;*/
+                    //$('#TablePlayerStepsInGame tbody:last').append("<tr>" + "<td></td>" + "<td></td>" + "<td>" + dataRank + "</td>" + "<td>" + dataSuite + "</td></tr>");
+                    $('#GameState')[0].value = gameState;
+                    $('#ButtonStand').hide();
+                    $('#ButtonHit').hide();
                     //location.reload();
                 },
                 error: function (data) {

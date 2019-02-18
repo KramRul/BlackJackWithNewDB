@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<BlackJack.BLL.Models.DealerStepViewModel>
 <table class="table">
-    <tr><th>Step Id</th><th>Dealer Id</th><th>Rank</th><th>Suite</th></tr>
+    <tr><th>Step Id</th><th>Dealer Id</th><th>Suite</th><th>Rank</th></tr>
     @foreach (var step in Model)
     {
-        <tr>
-            <td>@step.Id</td>
-            <td>@step.DealerId</td>
-            <td>@step.Rank</td>
-            <td>@step.Suite</td>
-        </tr>
+    <tr>
+        <td>@step.Id</td>
+        <td>@step.DealerId</td>
+        <td>@step.Suite</td>
+        <td>@step.Rank</td>
+    </tr>
     }
 </table>

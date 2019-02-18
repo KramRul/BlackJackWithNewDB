@@ -255,35 +255,36 @@ namespace BlackJack.BLL.Services
             }
         }
 
-        public void Stand(PlayerViewModel playerVM, DealerViewModel dealerVM)
+        public void Stand(PlayerViewModel playerVM, string gameId)
         {
-            Player player = Database.Players.Get(new Guid(playerVM.Id));
+            Player player = Database.Players.Get(Guid.Parse(playerVM.Id));
+            Game game = Database.Games.Get(Guid.Parse(gameId));
+            Dealer dealer = Database.Dealers.Get(game.Dealer.Id);
 
-            Dealer dealer = Database.Dealers.Get(dealerVM.Id);
-
-            while (TotalValue(Database.DealerSteps.GetAll()) <= 20)
+            if (game.GameState != GameState.Unknown) return;
+            while (TotalValue(Database.DealerSteps.GetAll().Where(d=>d.DealerId==dealer.Id)) <= 20)
             {
                 Random rnd = new Random();
                 var dealerStep = new DealerStep() { Dealer = dealer, DealerId = dealer.Id, Rank = (Rank)rnd.Next(1, 13), Suite = (Suite)rnd.Next(1, 4) };
                 Database.DealerSteps.Create(dealerStep);
                 Database.Save();
             }
-
-            if (TotalValue(Database.DealerSteps.GetAll()) > 21 || TotalValue(Database.PlayerSteps.GetAll()) > TotalValue(Database.DealerSteps.GetAll()))
+            if (TotalValue(Database.DealerSteps.GetAll()) > 21 || TotalValue(Database.PlayerSteps.GetAll().Where(p => p.PlayerId == playerVM.Id && p.GameId == game.Id)) > TotalValue(Database.DealerSteps.GetAll()))
             {
                 player.Balance += player.Bet;
-                //GameState = GameState.PlayerWon;
+                game.GameState = GameState.PlayerWon;
             }
-            else if (TotalValue(Database.DealerSteps.GetAll()) == TotalValue(Database.PlayerSteps.GetAll()))
+            else if (TotalValue(Database.DealerSteps.GetAll()) == TotalValue(Database.PlayerSteps.GetAll().Where(p => p.PlayerId == playerVM.Id && p.GameId == game.Id)))
             {
-                //GameState = GameState.Draw;
+                game.GameState = GameState.Draw;
             }
             else
             {
                 player.Balance -= player.Bet;
-                //GameState = GameState.DealerWon;
+                game.GameState = GameState.DealerWon;
             }
 
+            Database.Games.Update(game);
             Database.Players.Update(player);
             Database.Dealers.Update(dealer);
             Database.Save();

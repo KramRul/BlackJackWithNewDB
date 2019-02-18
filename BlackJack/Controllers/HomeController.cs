@@ -43,7 +43,7 @@ namespace BlackJack.Controllers
                 {
                     if (player == null) throw new ValidationException("Имя не должно быть пустым","");
                     Player user = await _userManager.FindByNameAsync(player);
-                    if (user.Balance<=0) throw new ValidationException("Баланс слишком низкий", "");
+                    if (user != null && user.Balance<=0) throw new ValidationException("Баланс слишком низкий", "");
                     if (user == null)
                     {
                         return RedirectToAction("Register", "User");
@@ -131,7 +131,26 @@ namespace BlackJack.Controllers
             {
                 return null;
             }
+        }
 
+        [HttpPost]
+        public GameStateViewModel Stand(string Id, string UserName, string GameId)
+        {
+            try
+            {
+                PlayerViewModel VM = new PlayerViewModel() { Id = Id, UserName = UserName };
+                _gameService.Stand(VM, GameId);
+                GameViewModel game = _gameService.GetGame(Guid.Parse(GameId));
+                return new GameStateViewModel() { Game = game };
+            }
+            catch (ValidationException ex)
+            {
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         [HttpGet]
@@ -153,9 +172,9 @@ namespace BlackJack.Controllers
                         GameDetailsViewModel VM = new GameDetailsViewModel()
                         {
                             Game = game,
-                            PlayerStepVM = _userService.GetAllSteps(game.Player.Id).ToList(),
-                            DealerStepVM = _dealerService.GetAllSteps(Id).ToList(),
-                            BotStepVM = _botService.GetAllSteps(Id).ToList()
+                            PlayerStepVM = _userService.GetAllSteps(game.Player.Id, game).ToList(),
+                            DealerStepVM = _dealerService.GetAllSteps(game.Dealer.Id).ToList(),
+                            BotStepVM = _botService.GetAllSteps().ToList()
                         };
 
                         return View(VM);

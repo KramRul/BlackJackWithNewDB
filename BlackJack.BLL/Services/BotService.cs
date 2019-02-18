@@ -81,6 +81,26 @@ namespace BlackJack.BLL.Services
             return pl;
         }
 
+        public IEnumerable<BotStepViewModel> GetAllSteps()
+        {
+            List<BotStepViewModel> pl = new List<BotStepViewModel>();
+            foreach (var item in Database.BotSteps.GetAll())
+            {
+                pl.Add(new BotStepViewModel()
+                {
+                    Id = item.Id,
+                    Suite = item.Suite,
+                    Rank = item.Rank,
+                    Bot = item.Bot,
+                    BotId = item.BotId,
+                    Game = item.Game,
+                    GameId = item.GameId
+                });
+               
+            }
+            return pl;
+        }
+
         public BotViewModel GetBot(Guid botId)
         {
             Bot bot = Database.Bots.Get(botId);
