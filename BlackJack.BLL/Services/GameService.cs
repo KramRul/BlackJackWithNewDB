@@ -12,8 +12,6 @@ namespace BlackJack.BLL.Services
 {
     public class GameService : IGameService
     {
-        public GameState GameState { get; set; }
-
         IUnitOfWork Database { get; set; }
 
         public GameService(IUnitOfWork uow)
@@ -23,18 +21,17 @@ namespace BlackJack.BLL.Services
 
         public GameViewModel StartGame(PlayerViewModel playerVM, int countOfBots)
         {
-
-            GameState = GameState.Unknown;
             Player player = Database.Players.Get(Guid.Parse(playerVM.Id));
-
-            Database.PlayerSteps.Create(CreatePlayerStep(player));
-            Database.PlayerSteps.Create(CreatePlayerStep(player));
 
             Dealer dealer = new Dealer();
             Database.DealerSteps.Create(CreateDealerStep(dealer));
             Database.DealerSteps.Create(CreateDealerStep(dealer));
             DealerStep dealerStep = CreateDealerStep(dealer);
-            Game game = new Game() { Player=player, Dealer= dealer };
+
+            Game game = new Game() { Player=player, Dealer= dealer, GameState=GameState.Unknown};
+
+            Database.PlayerSteps.Create(CreatePlayerStep(player, game));
+            Database.PlayerSteps.Create(CreatePlayerStep(player, game));
 
             if (countOfBots > 0)
             {
@@ -58,22 +55,26 @@ namespace BlackJack.BLL.Services
             Database.Save();
         }
 
-        public void Hit(PlayerViewModel playerVM, Guid gameId)
+        public PlayerStepViewModel Hit(PlayerViewModel playerVM, string gameId)
         {
             Player player = Database.Players.Get(Guid.Parse(playerVM.Id));
+            Game game = Database.Games.Get(Guid.Parse(gameId));
 
             Random rnd = new Random();
-            var playerStep = new PlayerStep() { Player = player, PlayerId = player.Id, Rank= (Rank)rnd.Next(1, 13), Suite = (Suite)rnd.Next(1, 4) };
+            var playerStep = new PlayerStep() { Player = player, PlayerId = player.Id, Rank = (Rank)rnd.Next(1, 13), Suite = (Suite)rnd.Next(1, 4), Game = game };
             Database.PlayerSteps.Create(playerStep);
             Database.Save();
 
-            if (TotalValue(Database.PlayerSteps.GetAll().Where(p=>p.PlayerId==playerVM.Id)) > 21)
+            if (TotalValue(Database.PlayerSteps.GetAll().Where(p => p.PlayerId == playerVM.Id && p.GameId == game.Id)) > 21)
             {
                 player.Balance -= player.Bet;
-                GameState = GameState.DealerWon;
+                game.GameState = GameState.DealerWon;
             }
+            Database.Games.Update(game);
             Database.Players.Update(player);
             Database.Save();
+
+            return new PlayerStepViewModel() { PlayerId = playerStep.PlayerId, GameId = playerStep.GameId, Rank = playerStep.Rank, Suite = playerStep.Suite };
         }
 
         private DealerStep CreateDealerStep(Dealer dealer)
@@ -82,10 +83,10 @@ namespace BlackJack.BLL.Services
             return new DealerStep() { Dealer = dealer, Rank = (Rank)rnd.Next(1, 13), Suite= (Suite)rnd.Next(1, 4) };
         }
 
-        private PlayerStep CreatePlayerStep(Player player)
+        private PlayerStep CreatePlayerStep(Player player, Game game)
         {
             Random rnd = new Random();
-            return new PlayerStep() { Player = player, Rank = (Rank)rnd.Next(1, 13), Suite = (Suite)rnd.Next(1, 4) };
+            return new PlayerStep() { Player = player, Rank = (Rank)rnd.Next(1, 13), Suite = (Suite)rnd.Next(1, 4), Game = game };
         }
 
         private int TotalValue(IEnumerable<PlayerStep> playerSteps)
@@ -271,16 +272,16 @@ namespace BlackJack.BLL.Services
             if (TotalValue(Database.DealerSteps.GetAll()) > 21 || TotalValue(Database.PlayerSteps.GetAll()) > TotalValue(Database.DealerSteps.GetAll()))
             {
                 player.Balance += player.Bet;
-                GameState = GameState.PlayerWon;
+                //GameState = GameState.PlayerWon;
             }
             else if (TotalValue(Database.DealerSteps.GetAll()) == TotalValue(Database.PlayerSteps.GetAll()))
             {
-                GameState = GameState.Draw;
+                //GameState = GameState.Draw;
             }
             else
             {
                 player.Balance -= player.Bet;
-                GameState = GameState.DealerWon;
+                //GameState = GameState.DealerWon;
             }
 
             Database.Players.Update(player);
@@ -290,7 +291,7 @@ namespace BlackJack.BLL.Services
 
         public void StopGame()
         {
-            GameState = GameState.Unknown;
+            //GameState = GameState.Unknown;
         }
 
         public void Dispose()
@@ -337,7 +338,8 @@ namespace BlackJack.BLL.Services
             {
                 Id = game.Id,
                 Player = game.Player,
-                Dealer = game.Dealer
+                Dealer = game.Dealer,
+                GameState = game.GameState
             };
         }
     }

@@ -16,5 +16,9 @@ namespace BlackJack.BLL.Models
         public string PlayerId { get; set; }
 
         public Player Player { get; set; }
+
+        public Guid GameId { get; set; }
+
+        public Game Game { get; set; }
     }
 }

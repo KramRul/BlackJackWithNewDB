@@ -56,6 +56,26 @@ namespace BlackJack.BLL.Services
             return pl;
         }
 
+        public IEnumerable<PlayerStepViewModel> GetAllSteps(string playerId, GameViewModel gvm)
+        {
+            List<PlayerStepViewModel> pl = new List<PlayerStepViewModel>();
+            foreach (var item in Database.PlayerSteps.GetAll())
+            {
+                if (item.PlayerId == playerId && item.GameId==gvm.Id)
+                {
+                    pl.Add(new PlayerStepViewModel()
+                    {
+                        Id = item.Id,
+                        Player = item.Player,
+                        PlayerId = item.PlayerId,
+                        Rank = item.Rank,
+                        Suite = item.Suite
+                    });
+                }
+            }
+            return pl;
+        }
+
         public void Edit(PlayerViewModel playerVM)
         {
             Player player = Database.Players.Get(new Guid(playerVM.Id));

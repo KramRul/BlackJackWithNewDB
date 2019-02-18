@@ -11,6 +11,8 @@ namespace BlackJack.BLL.Interfaces
 
         IEnumerable<PlayerStepViewModel> GetAllSteps(string playerId);
 
+        IEnumerable<PlayerStepViewModel> GetAllSteps(string playerId, GameViewModel gameVM);
+
         void Login(PlayerViewModel playerVM);
 
         void Edit(PlayerViewModel playerVM);

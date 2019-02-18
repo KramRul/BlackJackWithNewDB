@@ -100,7 +100,13 @@
                 data: { 'UserName': userName, 'Id': id, 'GameId': gameId },
                 success: function (data) {
                     console.log("hit good");
-                    
+                    console.log(data);
+                    var gameState = data.game.gameState;
+                    var dataSuite = data.playerStepVM.suite;
+                    var dataRank = data.playerStepVM.rank;
+                    $('#TablePlayerStepsInGame tbody:last').append("<tr>" + "<td></td>" + "<td></td>" + "<td>" + dataRank + "</td>" + "<td>" + dataSuite + "</td></tr>");
+                    $('#GameState')[0].value = gameState;
+                    if ($('#GameState')[0].value == 2) $('#ButtonHit').hide();
                     //location.reload();
                 },
                 error: function (data) {

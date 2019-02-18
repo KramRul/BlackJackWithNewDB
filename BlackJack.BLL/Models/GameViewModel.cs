@@ -9,6 +9,8 @@ namespace BlackJack.BLL.Models
     {
         public Guid Id { get; set; }
 
+        public GameState GameState { get; set; }
+
         public Player Player { get; set; }
 
         public Dealer Dealer { get; set; }

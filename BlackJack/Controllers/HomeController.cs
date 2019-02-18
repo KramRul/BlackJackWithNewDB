@@ -43,6 +43,7 @@ namespace BlackJack.Controllers
                 {
                     if (player == null) throw new ValidationException("Имя не должно быть пустым","");
                     Player user = await _userManager.FindByNameAsync(player);
+                    if (user.Balance<=0) throw new ValidationException("Баланс слишком низкий", "");
                     if (user == null)
                     {
                         return RedirectToAction("Register", "User");
@@ -55,7 +56,7 @@ namespace BlackJack.Controllers
                     {
                         Game = gVM,
                         DealerStepVM = _dealerService.GetAllSteps(gVM.Dealer.Id),
-                        PlayerStepVM = _userService.GetAllSteps(gVM.Player.Id)
+                        PlayerStepVM = _userService.GetAllSteps(gVM.Player.Id, gVM)
                     };
                     return View(gameDetailsVM);//StartGame
                 }
@@ -113,21 +114,22 @@ namespace BlackJack.Controllers
         }
 
         [HttpPost]
-        public void Hit(string Id, string UserName, string GameId)
+        public GameStateViewModel Hit(string Id, string UserName, string GameId)
         {
             try
             {
                 PlayerViewModel VM = new PlayerViewModel() { Id = Id, UserName = UserName };
-                _gameService.Hit(VM, GameId);
-                //return RedirectToAction("StartGame", "Home"/*, VM*/);
+                PlayerStepViewModel pVM = _gameService.Hit(VM, GameId);
+                GameViewModel game = _gameService.GetGame(Guid.Parse(GameId));
+                return new GameStateViewModel() { Game=game, PlayerStepVM=pVM};
             }
             catch (ValidationException ex)
             {
-                //return RedirectToAction("Index", "Home", ex.Property);
+                return null;
             }
             catch
             {
-                //return RedirectToAction("Index", "Home");
+                return null;
             }
 
         }
