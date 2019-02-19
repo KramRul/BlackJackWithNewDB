@@ -39,7 +39,7 @@ namespace BlackJack.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                if (ModelState.IsValid && User.Identity.IsAuthenticated)
                 {
                     if (player == null) throw new ValidationException("Имя не должно быть пустым","");
                     Player user = await _userManager.FindByNameAsync(player);
@@ -58,7 +58,7 @@ namespace BlackJack.Controllers
                         DealerStepVM = _dealerService.GetAllSteps(gVM.Dealer.Id),
                         PlayerStepVM = _userService.GetAllSteps(gVM.Player.Id, gVM)
                     };
-                    return View(gameDetailsVM);//StartGame
+                    return View("StartGame", gameDetailsVM);//StartGame
                 }
                 return View();
             }

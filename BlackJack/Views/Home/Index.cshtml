@@ -2,7 +2,9 @@
     ViewData["Title"] = "Home Page";
 }
 @model IEnumerable<BlackJack.DAL.Entities.Player>
-<form method="post" asp-controller="Home" asp-action="StartGame">
+
+
+    <!--<form method="post" asp-controller="Home" asp-action="StartGame">-->
     <div asp-validation-summary="All"></div>
     <div class="form-group">
         <label for="exampleFormControlSelect1">Выберите количество ботов</label>
@@ -16,7 +18,7 @@
         </select>
     </div>
     <div class="form-group">
-        <input name="player" id="player" list="players" />
+        <input name="player" id="player" list="players" class="form-control"/>
         <datalist id="players">
             @foreach (var user in Model)
             {
@@ -24,29 +26,34 @@
             }
         </datalist>
         <div>
-            <input type="password" id="Password" name="Password">
-        </div>
+            <input type="password" id="Password" name="Password" class="form-control">
+        </div>        
+    </div>
+    <div class="form-group">
         <input type="button" class="btn btn-primary btn-lg" name="SubmitLogin" id="SubmitLogin" value="Login" />
     </div>
-    <button type="submit" class="btn btn-primary btn-lg btn-block" id="SubmitStartGame" name="SubmitStartGame">Start Game</button>
-</form>
-<div>
-    @Html.RouteLink("Просмотреть все игры", new { action = "AllGames", controller = "Home" })
-</div>
-<div>
-    @Html.RouteLink("Просмотреть всех игроков", new { action = "Index", controller = "User" })
-</div>
-<div>
-    @Html.RouteLink("Просмотреть игры игроков", new { action = "AllGames", controller = "User" })
-</div>
-<div>
-    @Html.RouteLink("Просмотреть всех дилеров", new { action = "Index", controller = "Dealer" })
-</div>
-<div>
-    @Html.RouteLink("Просмотреть всех ботов", new { action = "Index", controller = "Bot" })
-</div>
-<div>
-    @Html.RouteLink("Register", new { action = "Register", controller = "User" })
-</div>
-<input type="hidden" name="SubmitLoginPath" id="SubmitLoginPath" data-submit-Path="@Url.Action("Login", "User")">
-<input type="button" name="getDataByLogin" id="getDataByLogin" data-submit-Path="@Url.Action("Test", "User")">
+        
+        <input type="button" class="btn btn-primary btn-lg btn-block" id="SubmitStartGame" name="SubmitStartGame" value="Start Game">
+
+        <div>
+            @Html.RouteLink("Просмотреть все игры", new { action = "AllGames", controller = "Home" })
+        </div>
+        <div>
+            @Html.RouteLink("Просмотреть всех игроков", new { action = "Index", controller = "User" })
+        </div>
+        <div>
+            @Html.RouteLink("Просмотреть игры игроков", new { action = "AllGames", controller = "User" })
+        </div>
+        <div>
+            @Html.RouteLink("Просмотреть всех дилеров", new { action = "Index", controller = "Dealer" })
+        </div>
+        <div>
+            @Html.RouteLink("Просмотреть всех ботов", new { action = "Index", controller = "Bot" })
+        </div>
+        <div>
+            @Html.RouteLink("Register", new { action = "Register", controller = "User" })
+        </div>
+        <input type="hidden" name="SubmitLoginPath" id="SubmitLoginPath" data-submit-Path="@Url.Action("Login", "User")">
+        <input type="hidden" name="SubmitStartGamePath" id="SubmitStartGamePath" data-submit-Start-Game-Path="@Url.Action("StartGame", "Home")">
+
+        <input type="button" hidden name="getDataByLogin" id="getDataByLogin" data-submit-Path="@Url.Action("Test", "User")">

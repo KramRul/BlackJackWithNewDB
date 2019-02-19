@@ -56,7 +56,9 @@ namespace BlackJack.Controllers
         [Authorize]
         public IActionResult Test()
         {
-            return Ok($"Ваш логин: {User.Identity.Name}");
+            if(User.Identity.IsAuthenticated)
+                return Ok($"Ваш логин: {User.Identity.Name}");
+            return null;
         }
 
         [HttpPost]
@@ -89,6 +91,33 @@ namespace BlackJack.Controllers
         [HttpPost]
         public async Task Login(RegisterViewModel model)
         {
+            Player user = await _userManager.FindByNameAsync(model.UserName);
+            var identity = await GetIdentity(model.UserName, model.Password);
+            if (identity == null)
+            {
+                Response.StatusCode = 400;
+                await Response.WriteAsync("Invalid username or password.");
+                ModelState.AddModelError(string.Empty, "Invalid username or password.");
+            }
+
+            JwtProvider jwtProvider = new JwtProvider(_userManager);
+
+            var encodedJwt = jwtProvider.GenerateJwtToken(user.Email, user);
+
+            var response = new
+            {
+                access_token = encodedJwt,
+                username = identity.Name
+            };
+
+            // сериализация ответа
+            Response.ContentType = "application/json";
+            await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { ReferenceLoopHandling= Newtonsoft.Json.ReferenceLoopHandling.Ignore, PreserveReferencesHandling = PreserveReferencesHandling.Objects, Formatting = Formatting.Indented }));
+        }
+
+        /*[HttpPost]
+        public async Task Login(RegisterViewModel model)
+        {
             Player user = new Player { UserName = model.UserName, Balance = 1000 };
             var identity = await GetIdentity(model.UserName, model.Password);
             if (identity == null)
@@ -111,7 +140,7 @@ namespace BlackJack.Controllers
             // сериализация ответа
             Response.ContentType = "application/json";
             await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
-        }
+        }*/
 
         private async Task<ClaimsIdentity> GetIdentity(string username, string password)
         {

@@ -38,6 +38,7 @@
         var HitPath = $('#HitPath').data("hit");
         var StandPath = $('#StandPath').data("stand");
         var SubmitLoginPath = $('#SubmitLoginPath').data("submitPath")
+        var SubmitStartGamePath = $('#SubmitStartGamePath').data("submitStartGamePath")
 
         $('#Take').on('click', function OneCard() {
             alert(PlaceAbetPath);
@@ -184,18 +185,21 @@
             sessionStorage.removeItem(tokenKey);
         });
 
-        $('#getDataByLogin').click(function (e) {
-            e.preventDefault();
-            $.ajax({
-                type: 'GET',
-                url: '/User/Test',
-                beforeSend: function (xhr) {
+        $('#SubmitStartGame').click(function (e) {
+            var player = $('#player')[0].value;
+            var countOfBots = $('#countOfBots')[0].value;
 
+            $.ajax({
+                type: 'POST',
+                url: SubmitStartGamePath,
+                data: { 'player': player, 'countOfBots': countOfBots },
+                beforeSend: function (xhr) {
                     var token = sessionStorage.getItem(tokenKey);
                     xhr.setRequestHeader("Authorization", "Bearer " + token);
                 },
                 success: function (data) {
-                    alert(data);
+                    console.log("start game good");
+                    $("body").html(data);
                 },
                 fail: function (data) {
                     console.log(data);
