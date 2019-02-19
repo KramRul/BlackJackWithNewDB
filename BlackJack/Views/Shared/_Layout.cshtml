@@ -37,6 +37,7 @@
         var PlaceAbetPath = $('#PlaceAbetPath').data("placeABet");
         var HitPath = $('#HitPath').data("hit");
         var StandPath = $('#StandPath').data("stand");
+        var SubmitLoginPath = $('#SubmitLoginPath').data("submitPath")
 
         $('#Take').on('click', function OneCard() {
             alert(PlaceAbetPath);
@@ -146,6 +147,61 @@
                 }
             })
         }
+        /****************************************************/
+        var tokenKey = "accessToken";
+        $('#SubmitLogin').click(function (e) {
+            e.preventDefault();
+            var loginData = {
+                grant_type: 'password',
+                username: $('#player').val(),
+                password: $('#Password').val()
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: SubmitLoginPath,
+                data: loginData,
+                success: function(data) {
+                    $('.userName').text(data.username);
+                    $('.userInfo').css('display', 'block');
+                    $('.loginForm').css('display', 'none');
+                    // сохраняем в хранилище sessionStorage токен доступа
+                    
+                    sessionStorage.setItem(tokenKey, data.access_token.Result);
+                    console.log(data.access_token);
+                    console.log(data.access_token.Result);
+                },
+                fail: function (data) {
+                    console.log(data);
+                }
+            });
+        });
+
+        $('#logOut').click(function (e) {
+            e.preventDefault();
+            $('.loginForm').css('display', 'block');
+            $('.userInfo').css('display', 'none');
+            sessionStorage.removeItem(tokenKey);
+        });
+
+        $('#getDataByLogin').click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'GET',
+                url: '/User/Test',
+                beforeSend: function (xhr) {
+
+                    var token = sessionStorage.getItem(tokenKey);
+                    xhr.setRequestHeader("Authorization", "Bearer " + token);
+                },
+                success: function (data) {
+                    alert(data);
+                },
+                fail: function (data) {
+                    console.log(data);
+                }
+            });
+        });
     </script>
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

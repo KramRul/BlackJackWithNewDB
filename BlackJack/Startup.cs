@@ -19,6 +19,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Principal;
 
 namespace BlackJack
 {
@@ -54,15 +57,17 @@ namespace BlackJack
                 .AddJwtBearer(options =>
                 {
                     options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.ClaimsIssuer = AuthOptions.ISSUER;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         // укзывает, будет ли валидироваться издатель при валидации токена
-                        ValidateIssuer = true,
+                        ValidateIssuer = false,
                         // строка, представляющая издателя
                         ValidIssuer = AuthOptions.ISSUER,
 
                         // будет ли валидироваться потребитель токена
-                        ValidateAudience = true,
+                        ValidateAudience = false,
                         // установка потребителя токена
                         ValidAudience = AuthOptions.AUDIENCE,
                         // будет ли валидироваться время существования
@@ -74,6 +79,11 @@ namespace BlackJack
                         ValidateIssuerSigningKey = true,
                     };
                 });
+
+            /*services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ApiUser", policy => policy.RequireClaim("rol", "api_access"));
+            });*/
 
             services.AddTransient<IUnitOfWork, EFUnitOfWork>();
             services.AddTransient<IGameService, GameService>();
@@ -87,20 +97,17 @@ namespace BlackJack
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            /*if (env.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-
+            
             app.UseHttpsRedirection();
-            app.UseStaticFiles();*/
-            app.UseCookiePolicy();
+            app.UseStaticFiles();
 
             app.UseAuthentication();
 

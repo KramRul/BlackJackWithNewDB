@@ -23,8 +23,12 @@
                 <option value=@user.UserName />
             }
         </datalist>
+        <div>
+            <input type="password" id="Password" name="Password">
+        </div>
+        <input type="button" class="btn btn-primary btn-lg" name="SubmitLogin" id="SubmitLogin" value="Login" />
     </div>
-    <button type="submit" class="btn btn-primary btn-lg btn-block">Start Game</button>
+    <button type="submit" class="btn btn-primary btn-lg btn-block" id="SubmitStartGame" name="SubmitStartGame">Start Game</button>
 </form>
 <div>
     @Html.RouteLink("Просмотреть все игры", new { action = "AllGames", controller = "Home" })
@@ -44,3 +48,5 @@
 <div>
     @Html.RouteLink("Register", new { action = "Register", controller = "User" })
 </div>
+<input type="hidden" name="SubmitLoginPath" id="SubmitLoginPath" data-submit-Path="@Url.Action("Login", "User")">
+<input type="button" name="getDataByLogin" id="getDataByLogin" data-submit-Path="@Url.Action("Test", "User")">

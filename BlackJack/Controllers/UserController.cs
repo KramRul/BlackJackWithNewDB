@@ -10,6 +10,7 @@ using BlackJack.BLL.Models;
 using BlackJack.BLL.Services;
 using BlackJack.DAL.Entities;
 using BlackJack.DAL.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -51,6 +52,13 @@ namespace BlackJack.Controllers
             return View("Register");
         }
 
+        [HttpGet]
+        [Authorize]
+        public IActionResult Test()
+        {
+            return Ok($"Ваш логин: {User.Identity.Name}");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -64,7 +72,7 @@ namespace BlackJack.Controllers
                 if (result.Succeeded)
                 {
                     // установка куки
-                    await _signInManager.SignInAsync(user, false);
+                    //await _signInManager.SignInAsync(user, false);
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -79,58 +87,49 @@ namespace BlackJack.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(RegisterViewModel model)
+        public async Task Login(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            Player user = new Player { UserName = model.UserName, Balance = 1000 };
+            var identity = await GetIdentity(model.UserName, model.Password);
+            if (identity == null)
             {
-                Player user = new Player { UserName = model.UserName, Balance = 1000 };
-
-                var identity = GetIdentity(model.UserName, model.PasswordHash);
-                if (identity == null)
-                {
-                    Response.StatusCode = 400;
-                    await Response.WriteAsync("Invalid username or password.");
-                    ModelState.AddModelError(string.Empty, "Invalid username or password.");
-                }
-
-                JwtFactory jwtFactory = new JwtFactory();
-
-                var encodedJwt = jwtFactory.GenerateEncodedToken(model.UserName, identity);
-
-                var response = new
-                {
-                    access_token = encodedJwt,
-                    username = identity.Name
-                };
-
-                // сериализация ответа
-                Response.ContentType = "application/json";
-                await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
-
-                
+                Response.StatusCode = 400;
+                await Response.WriteAsync("Invalid username or password.");
+                ModelState.AddModelError(string.Empty, "Invalid username or password.");
             }
-            return View(model);
+
+            JwtFactory jwtFactory = new JwtFactory();
+
+            var encodedJwt = jwtFactory.GenerateEncodedToken(model.UserName, identity);
+
+            var response = new
+            {
+                access_token = encodedJwt,
+                username = identity.Name
+            };
+
+            // сериализация ответа
+            Response.ContentType = "application/json";
+            await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
         }
 
-        private ClaimsIdentity GetIdentity(string username, string password)
+        private async Task<ClaimsIdentity> GetIdentity(string username, string password)
         {
-            Player player = _userManager.Users.FirstOrDefault(x => x.UserName == username && x.PasswordHash == password);
-            if (player != null)
-            {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, player.UserName),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, player.PasswordHash)
-                };
-                ClaimsIdentity claimsIdentity =
-                new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
-                    ClaimsIdentity.DefaultRoleClaimType);
-                return claimsIdentity;
-            }
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                return await Task.FromResult<ClaimsIdentity>(null);
 
-            // если пользователя не найдено
-            return null;
+            // get the user to verifty
+            var userToVerify = await _userManager.FindByNameAsync(username);
+
+            if (userToVerify == null) return await Task.FromResult<ClaimsIdentity>(null);
+            JwtFactory _jwtFactory = new JwtFactory();
+            // check the credentials
+            if (await _userManager.CheckPasswordAsync(userToVerify, password))
+            {
+                return await Task.FromResult(_jwtFactory.GenerateClaimsIdentity(username, userToVerify.UserName));
+            }
+            // Credentials are invalid, or account doesn't exist
+            return await Task.FromResult<ClaimsIdentity>(null);
         }
 
         // GET: User/Edit/5

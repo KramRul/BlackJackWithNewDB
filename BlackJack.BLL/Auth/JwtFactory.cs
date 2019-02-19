@@ -30,5 +30,13 @@ namespace BlackJack.BLL.Auth
 
             return encodedJwt;
         }
+
+        public ClaimsIdentity GenerateClaimsIdentity(string userName, string id)
+        {
+            return new ClaimsIdentity(new GenericIdentity(userName, "Token"), new[]
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, userName)
+            });
+        }
     }
 }
